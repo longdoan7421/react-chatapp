@@ -1,38 +1,34 @@
-import React, { Component, PropTypes } from 'react';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { deleteRoom } from '../Actions/chatAction';
 
-class ActionMenu extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			showActionMenu: false
-		}
-	}
+const ActionMenu = (props) => {
+  const dispatch = useDispatch();
+  const [isDisplayActionMenu, setIsDisplayActionMenu] = useState(false);
 
-	handleClick = () => {
-		this.setState({showActionMenu: !this.state.showActionMenu})
-	}
+  const toggleActionMenu = () => {
+    setIsDisplayActionMenu((prevState) => !prevState);
+  };
 
-	handleDeleteRoom = () => {
-		this.handleClick();
-		this.props.deleteRoom(this.props.roomId);
-	}
+  const deleteChatRoom = () => {
+    toggleActionMenu();
+    dispatch(deleteRoom(props.roomId));
+  };
 
-	render() {
-		return (
-			<div>
-				<span id="action_menu_btn" onClick={this.handleClick}>
-					<i className="fas fa-ellipsis-v"></i>
-				</span>
-				<div className="action_menu" style={{ display: this.state.showActionMenu ? 'block' : 'none' }}>
-					<ul>
-						<li onClick={this.handleDeleteRoom}>
-							<i className="fas fa-trash"></i> Delete chat room
-						</li>
-					</ul>
-				</div>
-			</div>
-		)
-	}
-}
+  return (
+    <div>
+      <span id="action_menu_btn" onClick={toggleActionMenu}>
+        <i className="fas fa-ellipsis-v"></i>
+      </span>
+      <div className="action_menu" style={{ display: isDisplayActionMenu ? 'block' : 'none' }}>
+        <ul>
+          <li onClick={deleteChatRoom}>
+            <i className="fas fa-trash"></i> Delete chat room
+          </li>
+        </ul>
+      </div>
+    </div>
+  );
+};
 
 export default ActionMenu;

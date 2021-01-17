@@ -1,18 +1,20 @@
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import UserInfo from './UserInfo';
+import { changeRoom } from '../Actions/chatAction';
 
-class Friend extends Component {
-	constructor(props) {
-		super(props);
-	}
+const Friend = (props) => {
+  const dispatch = useDispatch();
+  const currentRoomId = useSelector((state) => state.chatReducer.currentRoomId);
 
-	render() {
-		return (
-			<li className={this.props.currentRoomId === this.props.roomInfo.room_id ? 'active' : ''} onClick={e => this.props.changeRoom(this.props.roomInfo)}>
-				<UserInfo roomInfo={this.props.roomInfo} isList/>
-			</li>
-		)
-	}
-}
+  return (
+    <li
+      className={props.roomInfo.room_id === currentRoomId ? 'active' : ''}
+      onClick={(e) => dispatch(changeRoom(props.roomInfo.room_id))}
+    >
+      <UserInfo roomInfo={props.roomInfo} isShowOnlineStatus />
+    </li>
+  );
+};
 
 export default Friend;

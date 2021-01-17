@@ -1,25 +1,23 @@
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import ChatHeader from './ChatHeader';
 import ChatBody from './ChatBody';
 import ChatFooter from './ChatFooter';
+import { selectCurrentRoom } from '../Reducers/chatReducer';
 
-class Chat extends Component {
-	constructor(props) {
-		super(props);
-		console.log('Chat', props);
-	}
+const Chat = (props) => {
+  const currentRoom = useSelector((state) => selectCurrentRoom(state));
+  const myUserId = useSelector((state) => state.chatReducer.myUserId);
 
-	render() {
-		return (
-			<div className="col-md-8 col-xl-6 chat">
-				<div className="card">
-					<ChatHeader currentRoom={this.props.currentRoom} deleteRoom={this.props.deleteRoom}/>
-					<ChatBody currentRoom={this.props.currentRoom} selfId={this.props.selfId}/>
-					<ChatFooter sendMessage={this.props.sendMessage} selfId={this.props.selfId}/>
-				</div>
-			</div>
-		)
-	}
-}
+  return (
+    <div className="col-md-8 col-xl-6 chat">
+      <div className="card">
+        <ChatHeader currentRoom={currentRoom} />
+        <ChatBody currentRoom={currentRoom} myUserId={myUserId} />
+        <ChatFooter myUserId={myUserId} />
+      </div>
+    </div>
+  );
+};
 
 export default Chat;

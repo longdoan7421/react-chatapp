@@ -1,29 +1,26 @@
-import React, { Component, PropTypes } from 'react';
+import React, { useEffect, useRef } from 'react';
 import ChatMessage from './ChatMessage';
 
-class ChatBody extends Component {
-	constructor(props) {
-		super(props);
-		this.cardBody = React.createRef();
-	}
+const ChatBody = (props) => {
+  const cardBodyRef = useRef();
 
-	componentDidUpdate() {
-		const cardBody = this.cardBody.current;
-		cardBody.scrollTop = cardBody.scrollHeight;
-	}
+  useEffect(() => {
+    const cardBodyElement = cardBodyRef.current;
+    cardBodyElement.scrollTop = cardBodyElement.scrollHeight;
+  });
 
-	render() {
-		return (
-			<div className="card-body msg_card_body" ref={this.cardBody}>
-				{this.props.currentRoom.messages.map((message, index) => (
-					<ChatMessage key={index} {...message} 
-						avatar={this.props.currentRoom.avatar}
-						selfId={this.props.selfId}
-					/>
-				))}
-			</div>
-		)
-	}
-}
+  return (
+    <div className="card-body msg_card_body" ref={cardBodyRef}>
+      {props.currentRoom.messages.map((message, index) => (
+        <ChatMessage
+          key={index}
+          {...message}
+          avatar={props.currentRoom.avatar}
+          myUserId={props.myUserId}
+        />
+      ))}
+    </div>
+  );
+};
 
 export default ChatBody;

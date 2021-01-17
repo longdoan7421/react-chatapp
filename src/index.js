@@ -4,17 +4,19 @@ import './index.css';
 import App from './App';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
-import reducer from './Reducers';
+import appReducer from './Reducers';
 import * as serviceWorker from './serviceWorker';
-import chatList from './defaultState';
 
-const store = createStore(reducer, {contactReducer: chatList, chatReducer: chatList[0]});
+const store = createStore(
+  appReducer,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 
 ReactDOM.render(
-	<Provider store={store}>
-		<App />
-	</Provider>, 
-	document.getElementById('root')
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change

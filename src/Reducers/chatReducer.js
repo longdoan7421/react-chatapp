@@ -1,22 +1,58 @@
-import { SEND_MESSAGE, DELETE_ROOM, CHANGE_ROOM } from '../Actions';
+import { createSelector } from 'reselect';
+import { SEND_MESSAGE, DELETE_ROOM, CHANGE_ROOM } from '../Actions/chatAction';
+import dummyState from '../DummyState';
 
-const chatReducer = (state, action, fullState) => {
-	switch (action.type) {
-		case SEND_MESSAGE:
-			return Object.assign({}, state, 
-				state.messages.push({
-					user_id: action.user_id,
-					message: action.text,
-					time: action.time,
-				})
-			);
-		case CHANGE_ROOM:
-			return action.room;
-		case DELETE_ROOM:
-			return fullState.contactReducer[0];
-		default:
-			return state;
-	}
-}
+const initialState = {
+  myUserId: 333,
+  currentRoomId: dummyState[0].room_id,
+  chatList: dummyState,
+};
+
+const chatReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case SEND_MESSAGE:
+      const chatList = state.chatList.map((chatRoom) => {
+        if (chatRoom.room_id !== state.currentRoomId) return chatRoom;
+
+        return {
+          ...chatRoom,
+          messages: chatRoom.messages.concat([
+            {
+              user_id: action.sender_id,
+              message: action.text,
+              time: action.time,
+            },
+          ]),
+        };
+      });
+
+      return {
+        ...state,
+        chatList,
+      };
+    case CHANGE_ROOM:
+      return {
+        ...state,
+        currentRoomId: action.roomId,
+      };
+    case DELETE_ROOM: {
+      const chatList = state.chatList.filter((chatRoom) => chatRoom.room_id !== action.roomId);
+
+      return {
+        ...state,
+        chatList,
+      };
+    }
+    default:
+      return state;
+  }
+};
 
 export default chatReducer;
+
+export const selectCurrentRoom = createSelector(
+  [(state) => state.chatReducer.chatList, (state) => state.chatReducer.currentRoomId],
+  (chatList, currentRoomId) => {
+    return chatList.find((chatRoom) => chatRoom.room_id === currentRoomId) || chatList[0];
+  }
+);
