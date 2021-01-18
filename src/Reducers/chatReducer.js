@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 import { SEND_MESSAGE, DELETE_ROOM, CHANGE_ROOM } from '../Actions/chatAction';
 import dummyState from '../DummyState';
 
-const initialState = {
+export const initialState = {
   myUserId: 333,
   currentRoomId: dummyState[0].room_id,
   chatList: dummyState,
@@ -18,7 +18,7 @@ const chatReducer = (state = initialState, action) => {
           ...chatRoom,
           messages: chatRoom.messages.concat([
             {
-              user_id: action.sender_id,
+              user_id: action.senderId,
               message: action.text,
               time: action.time,
             },
@@ -41,7 +41,7 @@ const chatReducer = (state = initialState, action) => {
       return {
         ...state,
         chatList,
-        currentRoomId: chatList[0].room_id,
+        currentRoomId: (chatList[0] && chatList[0].room_id) || 0,
       };
     }
     default:
