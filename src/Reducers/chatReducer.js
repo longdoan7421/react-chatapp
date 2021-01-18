@@ -41,6 +41,7 @@ const chatReducer = (state = initialState, action) => {
       return {
         ...state,
         chatList,
+        currentRoomId: chatList[0].room_id,
       };
     }
     default:
